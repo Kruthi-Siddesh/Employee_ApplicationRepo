@@ -10,7 +10,7 @@ namespace Employee_Application.Models
     {
         public int Id { get; set; }
 
-        [RegularExpression(@"^[A-Z]*$", ErrorMessage = "Love you Muddu")]
+        [RegularExpression(@"^[A-Z]*$", ErrorMessage = "Enter Name in Capital letters only")]
         public string Name { get; set; }
     }
 }
