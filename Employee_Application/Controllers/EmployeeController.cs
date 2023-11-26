@@ -28,18 +28,18 @@ namespace Employee_Application.Controllers
             return Ok(result);
         }
 
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeByID(int id)
+        public async Task<IActionResult> GetEmployeeDetails(int id)
         {
-            var result = await _employeeService.GetEmpByID(id);
-            if (result == null)
-            {
-                return NotFound("Employee does not exists");
-            }
-            return Ok(result);
+              var result = await _employeeService.GetEmpByID(id);
+              if (result == null)
+              {
+                  return NotFound("Employee does not exists");
+              }
+              return Ok(result);
         }
 
+        
 
         [HttpPost]
         public async Task<IActionResult> AddEmployee([FromBody] Employees employee)
@@ -48,11 +48,10 @@ namespace Employee_Application.Controllers
             return StatusCode(201, result);
         }
 
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployeeByID(int id, string name)
+        public async Task<IActionResult> UpdateEmployeeByID(int id, [FromQuery] Employees employee)
         {
-            var result = await _employeeService.UpdateEmp(id, name);
+            var result = await _employeeService.UpdateEmp(id, employee);
             if (result == null)
             {
                 return BadRequest("Inavlaid Id");
@@ -63,9 +62,9 @@ namespace Employee_Application.Controllers
 
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateEmployeeDetailByID(int id, string name)
+        public async Task<IActionResult> UpdatePartOfEmployee(int id, [FromQuery] Employees employee)
         {
-            var result = await _employeeService.UpdateEmpDeatils(id, name);
+            var result = await _employeeService.UpdatePartOfEmp(id, employee);
             if (result == null)
             {
                 return BadRequest("Inavlaid Details");
