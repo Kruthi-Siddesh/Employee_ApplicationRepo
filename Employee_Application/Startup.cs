@@ -30,6 +30,8 @@ namespace Employee_Application
         {
             services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<Employees>();
+            services.AddSingleton<EmployeeDetailDto>();
+            services.AddSingleton<EmployeeDto>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

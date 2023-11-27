@@ -8,15 +8,20 @@ namespace Employee_Application.Services
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<Employees>> GetEmployee();
+        Task<IEnumerable<EmployeeDto>> GetEmployee();
 
-        Task<Employees> GetEmpByID(int id);
+        Task<IEnumerable<EmployeeDetailDto>> GetEmpByID(int id);
 
-        Task<IEnumerable<Employees>> CreateEmployee(Employees emp);
+        /* Depending on the requirements we can define methods
+         * Task<IEnumerable<EmployeeDetailDto>> GetEmpByID(int id);
+         * Task<IEnumerable<EmployeeDDto>> GetEmpByID(int id);
+         * Task<IEnumerable<Employees>> GetEmpByID(int id); */
 
-        Task<Employees> UpdateEmp(int id, string name);
+        Task<IEnumerable<Employees>> CreateEmployee(Employees employee);
 
-        Task<Employees> UpdateEmpDeatils(int id, string name);
+        Task<Employees> UpdateEmp(int id, Employees employee);
+
+        Task<Employees> UpdatePartOfEmp(int id, Employees employee);
 
         Task<Employees> DeleteEmp(int id);
     }
