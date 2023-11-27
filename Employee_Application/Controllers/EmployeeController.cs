@@ -42,14 +42,14 @@ namespace Employee_Application.Controllers
         
 
         [HttpPost]
-        public async Task<IActionResult> AddEmployee([FromBody] Employees employee)
+        public async Task<IActionResult> AddEmployee([FromBody] EmployeeDetailDto employee)
         {
             var result = await _employeeService.CreateEmployee(employee);
             return StatusCode(201, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployeeByID(int id, [FromQuery] Employees employee)
+        public async Task<IActionResult> UpdateEmployeeByID(int id, [FromQuery] EmployeeDetailDto employee)
         {
             var result = await _employeeService.UpdateEmp(id, employee);
             if (result == null)
@@ -62,7 +62,7 @@ namespace Employee_Application.Controllers
 
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdatePartOfEmployee(int id, [FromQuery] Employees employee)
+        public async Task<IActionResult> UpdatePartOfEmployee(int id, [FromQuery] EmployeeDetailDto employee)
         {
             var result = await _employeeService.UpdatePartOfEmp(id, employee);
             if (result == null)
@@ -80,7 +80,7 @@ namespace Employee_Application.Controllers
             var result = await _employeeService.DeleteEmp(id);
             if (result == null)
             {
-                return BadRequest("Employee does not exists");
+                return BadRequest("Employee ID does not exists");
             }
             return Ok(result);
         }
