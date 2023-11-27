@@ -8,8 +8,7 @@ namespace Employee_Application.Models
 {
     public class EmployeeDetailDto
     {
-        public int Id { get; set; }
-
+       
         [RegularExpression(@"^[A-Z]*$", ErrorMessage = "Enter Name in Capital letters only")]
         public string Name { get; set; }
 

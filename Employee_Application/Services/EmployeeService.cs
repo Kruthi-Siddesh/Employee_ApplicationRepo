@@ -8,11 +8,13 @@ namespace Employee_Application.Services
 {
     public class EmployeeService : IEmployeeService
     {
+        /* Use whenn you have specific requirements
         private Employees context;
         public EmployeeService(Employees context)
         {
             this.context = context;
         }
+        */
         private static List<Employees> employees = new List<Employees>()
         {
             new Employees() {Id = 1, Name = "ruthi", Address = "ckm", Salary = 1},
@@ -20,100 +22,99 @@ namespace Employee_Application.Services
             new Employees() {Id = 3, Name = "vir", Address = "bang", Salary = 3}
         };
 
-        public async Task<IEnumerable<EmployeeDto>> GetEmployee()
+        private EmployeeDetailDto MapToDTO(Employees employee)
         {
-            var employee = employees.Select(s => new EmployeeDto()
+            return new EmployeeDetailDto
             {
-                Id = s.Id,
-                Name = s.Name
-            });
-
-            return employee.ToList(); ;
+                Name = employee.Name,
+                Address = employee.Address,
+                Salary = employee.Salary
+            };
         }
 
-       
-          public async Task<IEnumerable<EmployeeDetailDto>> GetEmpByID(int id)
+        public async Task<IEnumerable<EmployeeDetailDto>> GetEmployee()
         {
-           var employee = employees.Where(e=> e.Id == id).Select(s => new EmployeeDetailDto() //Method Syntax
-             {
-                Id = s.Id,
-                Name = s.Name,
-                Address = s.Address,
-                Salary = s.Salary
-             }).ToList();
+            /* Without using DTO
+             var employee = employees.FirstOrDefault();
+             return employee;
+            */
+            var employee = employees.Select(e => MapToDTO(e));
 
-            return employee;
-
-            /* "QUERY SYNTAX"
-              var employee = from e in employees
-                            where e.Id == id
-                            select new EmployeeDetailDto()
-                            {
-                                Id = e.Id,
-                                Name = e.Name,
-                                Address = e.Address,
-                                Salary = e.Salary
-                            }; 
-            return employee.ToList(); */
-
-
-            /* 
-             "Without using LINQ (change return type to Task<EmployeeDetailDto>)"
-
-             var emp = employees.Where(x => x.Id == id).FirstOrDefault();
-
-             var employeeDto = new EmployeeDto
-             {
-               Id = emp.Id,
-               Name = emp.Name
-             };
-             return employeeDto;*/
-
-            //we can perform same for Employees and EmployeeDto by changing the return type.
-
+            return await Task.FromResult(employee);
         }
-
-        public async Task<IEnumerable<Employees>> CreateEmployee(Employees employee)
+ 
+          public async Task<EmployeeDetailDto> GetEmpByID(int id)
         {
-            employees.Add(employee);
-            return employees.ToList();
-
-        }
-
-        public async Task<Employees> UpdateEmp(int id, Employees employee)
-        {
-            var emp = employees.Find(x => x.Id == id);
-            if (emp == null)
+            var employee = employees.Where(e => e.Id == id).FirstOrDefault();
+            if (employee == null)
             {
                 return null;
             }
-            emp.Id = id;
-            emp.Name = employee.Name;
-            emp.Address = employee.Address;
-            emp.Salary = employee.Salary;
-            return emp;
+
+            return await Task.FromResult(MapToDTO(employee));
+
         }
 
-        public async Task<Employees> UpdatePartOfEmp(int id, Employees employee)
+        public async Task<EmployeeDetailDto> CreateEmployee(EmployeeDetailDto employee)
         {
-            var emp = employees.Find(x => x.Id == id);
-            if (emp == null)
+            var emp = new Employees
+            {
+                Id = employees.Count + 1,
+                Name = employee.Name,
+                Address = employee.Address,
+                Salary = employee.Salary
+            };
+
+            employees.Add(emp);
+            return await Task.FromResult(MapToDTO(emp));
+
+        }
+        public async Task<EmployeeDetailDto> UpdateEmp(int id, EmployeeDetailDto employee)
+        {
+            var emp = employees.FirstOrDefault(x => x.Id == id);
+            if (emp != null)
+            {
+                emp.Name = employee.Name;
+                emp.Address = employee.Address;
+                emp.Salary = employee.Salary;
+
+                return await Task.FromResult(MapToDTO(emp));
+            }
+            else
             {
                 return null;
             }
-            emp.Id = id;
-            emp.Name = employee.Name ?? emp.Name;
-            emp.Address = employee.Address ?? emp.Address; // " ?? null-coalescing operator"
-            emp.Salary = employee.Salary != null ? employee.Salary : emp.Salary; // " ?: Ternary operator"
-            return emp;
         }
 
-        public async Task<Employees> DeleteEmp(int id)
+        public async Task<EmployeeDetailDto> UpdatePartOfEmp(int id, EmployeeDetailDto employee)
         {
             var emp = employees.Find(x => x.Id == id);
-            employees.Remove(emp);
-            return emp;
+            if (emp != null)
+            {
+                emp.Name = employee.Name ?? emp.Name;
+                emp.Address = employee.Address ?? emp.Address; // " ?? null-coalescing operato
+                emp.Salary = employee.Salary != null ? employee.Salary : emp.Salary; // " ?: Ternary operator"
+                return await Task.FromResult(MapToDTO(emp));
+            }
+            else
+            {
+                return null;
+            }
+      
+        }
 
+        public async Task<string> DeleteEmp(int id)
+        {
+            var emp = employees.Find(x => x.Id == id);
+            if (emp != null)
+            {
+                employees.Remove(emp);
+                return await Task.FromResult("Employee deleted successfully");
+            }
+            else
+            {
+                return await Task.FromResult("Employee ID does not exist");
+            }
 
         }
     }

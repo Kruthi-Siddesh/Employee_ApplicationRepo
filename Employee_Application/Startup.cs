@@ -29,9 +29,7 @@ namespace Employee_Application
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IEmployeeService, EmployeeService>();
-            services.AddSingleton<Employees>();
-            services.AddSingleton<EmployeeDetailDto>();
-            services.AddSingleton<EmployeeDto>();
+          //services.AddSingleton<Employees>(); register only when instance of Employees is used for specific purpose. 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
